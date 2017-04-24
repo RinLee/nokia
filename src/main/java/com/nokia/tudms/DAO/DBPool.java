@@ -4,10 +4,13 @@ import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Logger;
+
 import com.alibaba.druid.pool.*;
 
 public class DBPool {
-    private static DBPool dbPool = null;
+    private static Logger logger = Logger.getLogger(DBPool.class.getName());
+    private volatile static DBPool dbPool = null;
     private static DruidDataSource druidDataSource = null;
     static {
         Properties properties = loadPropertyFile("/jdbc.properties");
@@ -20,8 +23,12 @@ public class DBPool {
 
     private DBPool() {}
     public static synchronized DBPool getInstance() {
-        if (null == dbPool) {
-            dbPool = new DBPool();
+        if (dbPool == null) {
+            synchronized(DBPool.class){
+                if (dbPool == null){
+                    dbPool = new DBPool();
+                }
+            }
         }
         return dbPool;
     }
@@ -30,7 +37,7 @@ public class DBPool {
     }
     public static Properties loadPropertyFile(String file) {
         if(file == null || file.equals("")){
-            System.out.println("FileName can not be null");
+            logger.warning("FileName can not be null");
         }
         Properties properties = new Properties();
 
@@ -38,7 +45,7 @@ public class DBPool {
         System.out.println(url);
         InputStream in = DBPool.class.getResourceAsStream(file);
         if(in == null){
-            System.out.println("File not find");
+            logger.warning("File not find");
         }
 
         try {
