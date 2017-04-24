@@ -18,7 +18,9 @@ public class TokenManager {
         tokenMap = new HashMap<String, LoggedUser>();
         userIdMap = new HashMap<Integer, LoggedUser>();
     }
-
+    public static TokenManager getInstance(){
+        return uniqueTokenManager;
+    }
     /**
      * 向Token管理器中添加用户
      * @param userId

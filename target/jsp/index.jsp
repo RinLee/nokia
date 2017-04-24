@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false"%>
 <html>
 <body>
-<h2>Hello World!${userInfo.userName}</h2>
+<h2>Hello World!${loggedUserBean}</h2>
 </body>
 </html>
